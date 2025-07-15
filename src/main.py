@@ -102,7 +102,7 @@ def main():
         if predict_model_option == "Yes":
             inputs = util.ask_two_numbers()
             prediction = model.predict(np.array([inputs]))
-            print(f"Prediction for inputs {inputs}: {prediction}")
+            print(f"Prediction for inputs {inputs}: {round(prediction)}")
     elif selected_model_option == "Load an existing model":
         model = NeuralNetwork()
         model = model.load("model.pth")

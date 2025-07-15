@@ -8,10 +8,10 @@ def generate_data():
     Each pair consists of two integers between 1 and 5, inclusive.
     """
 
-    # --- Generates 1.000 pairs of numbers ---
+    # --- Generates 10.000 pairs of numbers ---
     import random
     data = []
-    for _ in range(1000):
+    for _ in range(10000):
         num1 = random.randint(1, 5)
         num2 = random.randint(1, 5)
         data.append((num1, num2, num1 + num2))
