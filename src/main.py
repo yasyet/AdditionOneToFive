@@ -26,41 +26,46 @@ def main():
         print("Exiting the project. Goodbye!")
         os._exit(0)
 
-    selected_data_option = util.choose_option(
+    if selected_model_option == "Train a new model":
+        selected_data_option = util.choose_option(
         "Choose an option:",
         ["Use existing data", "Generate synthetic data", "Exit"]
-    )
+        )
 
-    if selected_data_option == "Exit":
-        print("Exiting the project. Goodbye!")
-        os._exit(0)
+        if selected_data_option == "Exit":
+            print("Exiting the project. Goodbye!")
+            os._exit(0)
 
     # --- Proceed with the selected options ---
     util.terminal_seperator()
-    print(f"You selected: {selected_model_option} and {selected_data_option}")
+    if selected_model_option == "Train a new model":
+        print(f"You selected: {selected_model_option} and {selected_data_option}")
+    else:
+        print(f"You selected: {selected_model_option}")
     util.terminal_seperator()
 
     # --- Load or generate data based on user choice ---
-    if selected_data_option == "Use existing data":
-        data = prep.load_data("data.txt", "data/")
-    elif selected_data_option == "Generate synthetic data":
-        data = prep.generate_data()
-        save_data_option = util.choose_option(
-            "Data generated successfully. Do you want to save it?",
-            ["Yes", "No"]
-        )
+    if selected_model_option == "Train a new model":
+        if selected_data_option == "Use existing data":
+            data = prep.load_data("data.txt", "data/")
+        elif selected_data_option == "Generate synthetic data":
+            data = prep.generate_data()
+            save_data_option = util.choose_option(
+                "Data generated successfully. Do you want to save it?",
+                ["Yes", "No"]
+            )
         if save_data_option == "Yes":
             prep.save_data(data)
             print("Data saved successfully.")
-    else:
-        print("Invalid option selected.")
-        os._exit(1)
+        else:
+            print("Invalid option selected.")
+            os._exit(1)
 
     # --- Continue with model training or evaluation ---
     if selected_model_option == "Train a new model":
         model = NeuralNetwork(layers=[
             DenseLayer(2, 4, activation_function=relu),
-            DenseLayer(4, 1, activation_function=sigmoid)
+            DenseLayer(4, 1, activation_function=linear)
         ])
         model.train(data, epochs=10000, learning_rate=0.01)
 
@@ -98,9 +103,18 @@ def main():
             inputs = util.ask_two_numbers()
             prediction = model.predict(np.array([inputs]))
             print(f"Prediction for inputs {inputs}: {prediction[0][0]}")
-    else:
-        print("Invalid option selected.")
-        os._exit(1)
+    elif selected_model_option == "Load an existing model":
+        model = NeuralNetwork()
+        model = model.load("model.pth")
+        if model is None:
+            print("Model not found. Please train a model first.")
+            os._exit(1)
+        print("Model loaded successfully.")
+        util.terminal_seperator()
+
+        inputs = util.ask_two_numbers()
+        prediction = model.predict(np.array([inputs]))
+        print(f"Prediction for inputs {inputs}: {round(prediction)}")
 
 if __name__ == "__main__":
     main()

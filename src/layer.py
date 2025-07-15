@@ -44,7 +44,7 @@ class DenseLayer():
 
     def backward(self, grad, learning_rate):
         # Compute the gradient of the activation function
-        activation_grad = grad * self.activation_derivative(self.z)
+        activation_grad = grad * self.activation_derivative(self.a)
 
         # Compute gradients for weights and biases
         self.weights_gradient = np.dot(self.inputs.T, activation_grad)  # Shape: (input_size, output_size)

@@ -2,7 +2,7 @@
 import numpy as np
 
 class NeuralNetwork():
-    def __init__(self, layers):
+    def __init__(self, layers=[]):
         """
         Initialize the neural network with a list of layers.
         :param layers: List of Layer objects
@@ -17,7 +17,7 @@ class NeuralNetwork():
         """
         for layer in self.layers:
             inputs = layer.forward(inputs)
-        return inputs
+        return inputs[0][0]
 
     def train(self, training_data, epochs, learning_rate):
         """
@@ -65,14 +65,15 @@ class NeuralNetwork():
 
     def evaluate(self, test_data):
         """
-        Evaluate the neural network on test data.
-        :param test_data: Tuple of (inputs, targets)
-        :return: Accuracy of the model
+        Evaluiert das neuronale Netz und gibt den mittleren quadratischen Fehler (MSE) zurück.
+        :param test_data: Tupel aus (inputs, targets)
+        :return: Mittlerer quadratischer Fehler (MSE) des Modells
         """
         inputs, targets = test_data
         predictions = self.predict(inputs)
-        accuracy = np.mean(np.argmax(predictions, axis=1) == np.argmax(targets, axis=1))
-        return accuracy
+        # Berechne den MSE, genau wie in der Trainingsschleife
+        loss = np.mean((predictions - targets) ** 2)
+        return loss
     
     def save(self, filename, path='models/'):
         """
